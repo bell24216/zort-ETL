@@ -55,7 +55,7 @@ def get_order(storename, apikey, apisecret, date, limit=1000):
 # Main Cloud Function Entry
 # -------------------------------------------------------------------------
 @functions_framework.cloud_event
-def hello_pubsub(cloud_event):
+def main(request):
     try:
         # เวลาปัจจุบันไทย
         utc_now = datetime.utcnow()

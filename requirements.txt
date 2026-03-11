@@ -1,0 +1,8 @@
+requests
+google-cloud-storage
+functions-framework==3.*
+python-dotenv
+pandas
+google-cloud-bigquery
+pytz
+pyarrow
