@@ -167,6 +167,7 @@ def main(request):
 
         print(f"✅ Inserted {len(df)} rows to {table_id}")
         ## python -m functions_framework --target=main --port=8080
+        ##ss
         return f"Inserted {len(df)} rows", 200
 
     except Exception as e:
