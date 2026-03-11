@@ -54,7 +54,7 @@ def get_order(storename, apikey, apisecret, date, limit=1000):
 # -------------------------------------------------------------------------
 # Main Cloud Function Entry
 # -------------------------------------------------------------------------
-@functions_framework.cloud_event
+@functions_framework.http
 def main(request):
     try:
         # เวลาปัจจุบันไทย
@@ -140,11 +140,11 @@ def main(request):
 
         # logging.info(f"DataFrame shape: {df.shape}")
         # print(df.head())
-
+        table_ref = f"{project_id}.{dataset_id}.{table_id}"
         client_bigquery = bigquery.Client(project=project)  # เพิ่ม project ID
-
+        
         query = f"""
-        delete {project}.{dataset_id}.{table_id}
+        delete {table_ref}
         where PARSE_DATE('%Y-%m-%d', successDateString)  = '{date}'
         """
 
@@ -161,10 +161,13 @@ def main(request):
         bq_client = bigquery.Client(project=project_id)
         table_ref = f"{project_id}.{dataset_id}.{table_id}"
         job_config = bigquery.LoadJobConfig(write_disposition="WRITE_APPEND")
+
         job = bq_client.load_table_from_dataframe(df, table_ref, job_config=job_config)
         job.result()
 
-        print(f"✅ Inserted {len(df)} rows to {table_ref}")
+        print(f"✅ Inserted {len(df)} rows to {table_id}")
+        ## python -m functions_framework --target=main --port=8080
+        return f"Inserted {len(df)} rows", 200
 
     except Exception as e:
         logging.error(f"❌ Error processing event: {e}")
